@@ -14,12 +14,14 @@ class EndSessionRequest implements _Mappable {
   Map<String, String> toAdditionalParametersMap(String idTokenHint, String postLogoutRedirectUri) {
     return <String, String>{
       'id_token_hint': idTokenHint,
-      'post_logout_redirect_uri': postLogoutRedirectUri,
+      'post_logout_redirect_uri': postLogoutRedirectUri
     };
   }
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
+      'clientId': "notused",
+      'redirectUrl': "http://notused",
       'serviceConfiguration': serviceConfiguration?.toMap(),
       'additionalParameters': additionalParameters
     };

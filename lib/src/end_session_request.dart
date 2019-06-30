@@ -4,19 +4,24 @@ part of flutter_appauth;
 class EndSessionRequest implements _Mappable {
 
   AuthorizationServiceConfiguration serviceConfiguration;
-  String idTokenHint;
-  String postLogoutRedirectUri;
+  Map<String, String> additionalParameters;
 
   EndSessionRequest(String idTokenHint, String postLogoutRedirectUri, AuthorizationServiceConfiguration serviceConfiguration) {
     this.serviceConfiguration = serviceConfiguration;
-    this.idTokenHint = idTokenHint;
-    this.postLogoutRedirectUri = postLogoutRedirectUri;
+    this.additionalParameters = toAdditionalParametersMap(idTokenHint, postLogoutRedirectUri);
+  }
+
+  Map<String, String> toAdditionalParametersMap(String idTokenHint, String postLogoutRedirectUri) {
+    return <String, String>{
+      'id_token_hint': idTokenHint,
+      'post_logout_redirect_uri': postLogoutRedirectUri,
+    };
   }
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
-      'id_token_hint': idTokenHint,
-      'post_logout_redirect_uri': postLogoutRedirectUri,
-      'serviceConfiguration': serviceConfiguration?.toMap()
+      'serviceConfiguration': serviceConfiguration?.toMap(),
+      'additionalParameters': additionalParameters
     };
-  }}
+  }
+}

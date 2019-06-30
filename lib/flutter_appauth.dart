@@ -15,3 +15,4 @@ part 'src/token_request.dart';
 part 'src/flutter_appauth.dart';
 part 'src/mappable.dart';
 part 'src/authorization_parameters.dart';
+part 'src/end_session_request.dart';

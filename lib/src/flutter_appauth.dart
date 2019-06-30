@@ -52,4 +52,8 @@ class FlutterAppAuth {
         result['tokenType'],
         result['tokenAdditionalParameters']?.cast<String, String>());
   }
+
+  Future<void> endSession(EndSessionRequest request) async {
+    await _channel.invokeMethod('authorize', request.toMap());
+  }
 }

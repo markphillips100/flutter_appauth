@@ -1,7 +1,37 @@
-part of flutter_appauth;
+import 'authorization_service_configuration.dart';
+import 'common_request_details.dart';
+import 'grant_types.dart';
 
 /// Details for a token exchange request
-class TokenRequest with _CommonRequestDetails {
+class TokenRequest with CommonRequestDetails {
+  TokenRequest(String clientId, String redirectUrl,
+      {this.clientSecret,
+      List<String> scopes,
+      AuthorizationServiceConfiguration serviceConfiguration,
+      Map<String, String> additionalParameters,
+      this.refreshToken,
+      this.grantType,
+      String issuer,
+      String discoveryUrl,
+      this.authorizationCode,
+      this.codeVerifier,
+      bool allowInsecureConnections = false})
+      : assert(
+            issuer != null ||
+                discoveryUrl != null ||
+                (serviceConfiguration?.authorizationEndpoint != null &&
+                    serviceConfiguration?.tokenEndpoint != null),
+            'Either the issuer, discovery URL or service configuration must be provided') {
+    this.clientId = clientId;
+    this.redirectUrl = redirectUrl;
+    this.scopes = scopes;
+    this.serviceConfiguration = serviceConfiguration;
+    this.additionalParameters = additionalParameters;
+    this.issuer = issuer;
+    this.discoveryUrl = discoveryUrl;
+    this.allowInsecureConnections = allowInsecureConnections;
+  }
+
   /// The client secret
   final String clientSecret;
 
@@ -17,35 +47,10 @@ class TokenRequest with _CommonRequestDetails {
   /// The code verifier to be sent with the authorization code. This should match the code verifier used when performing the authorization request
   final String codeVerifier;
 
-  TokenRequest(String clientId, String redirectUrl,
-      {this.clientSecret,
-      List<String> scopes,
-      AuthorizationServiceConfiguration serviceConfiguration,
-      Map<String, String> additionalParameters,
-      this.refreshToken,
-      this.grantType,
-      String issuer,
-      String discoveryUrl,
-      this.authorizationCode,
-      this.codeVerifier})
-      : assert(
-            (issuer != null ||
-                discoveryUrl != null ||
-                (serviceConfiguration?.authorizationEndpoint != null &&
-                    serviceConfiguration?.tokenEndpoint != null)),
-            'Either the issuer, discovery URL or service configuration must be provided') {
-    this.clientId = clientId;
-    this.redirectUrl = redirectUrl;
-    this.scopes = scopes;
-    this.serviceConfiguration = serviceConfiguration;
-    this.additionalParameters = additionalParameters;
-    this.issuer = issuer;
-    this.discoveryUrl = discoveryUrl;
-  }
-
+  @override
   Map<String, dynamic> toMap() {
-    var map = super.toMap();
-    String inferredGrantType = _inferGrantType();
+    final Map<String, dynamic> map = super.toMap();
+    final String inferredGrantType = _inferGrantType();
     map['clientSecret'] = clientSecret;
     map['refreshToken'] = refreshToken;
     map['authorizationCode'] = authorizationCode;
@@ -59,10 +64,10 @@ class TokenRequest with _CommonRequestDetails {
       return grantType;
     }
     if (refreshToken != null) {
-      return 'refresh_token';
+      return GrantType.refreshToken;
     }
     if (authorizationCode != null) {
-      return 'authorization_code';
+      return GrantType.authorizationCode;
     }
     throw 'Grant type not specified and cannot be inferred';
   }

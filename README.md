@@ -5,7 +5,9 @@
 
 A Flutter bridge for AppAuth (https://appauth.io) used authenticating and authorizing users. Note that AppAuth also supports the PKCE extension that is required some providers so this plugin should work with them.
 
-**NOTE**: if Chrome Custom Tabs are not working in your Android app, check to make sure that you have the latest version of this plugin, Android Studio, Gradle distribution and Android Gradle plugin for your app. There was previously a known [issue](https://issuetracker.google.com/issues/119183822) with the Android tooling with AndroidX that should now be resolved since Android Studio 3.4 has been released
+**IMPORTANT NOTES**:
+- This plugin requires apps to be using AndroidX. The Flutter tooling supports creating apps with AndroidX support but requires passing the `androidx` flag. Details on AndroidX compatibility and migration can be found [here](https://flutter.dev/docs/development/packages-and-plugins/androidx-compatibility)
+- If Chrome Custom Tabs are not working in your Android app, check to make sure that you have the latest version of this plugin, Android Studio, Gradle distribution and Android Gradle plugin for your app. There was previously a known [issue](https://issuetracker.google.com/issues/119183822) with the Android tooling with AndroidX that should now be resolved since Android Studio 3.4 has been released
 
 
 ## Getting Started
@@ -22,7 +24,7 @@ FlutterAppAuth appAuth = FlutterAppAuth();
 Afterwards, you'll reach a point where end-users need to be authorized and authenticated. A convenience method is provided that will perform an authorization request and automatically exchange the authorization code. This can be done in a few different ways, one of which is to use the OpenID Connect Discovery
 
 ```dart
-var result = await appAuth.authorizeAndExchangeCode(
+final AuthorizationTokenResponse result = await appAuth.authorizeAndExchangeCode(
                     AuthorizationTokenRequest(
                       '<client_id>',
                       '<redirect_url>',
@@ -37,7 +39,7 @@ Here the `<client_id>` and `<redirect_url>` should be replaced by the values reg
 Rather than using the full discovery URL, the issuer could be used instead so that the process retrieving the discovery document is skipped
 
 ```dart
-var result = await appAuth.authorizeAndExchangeCode(
+final AuthorizationTokenResponse result = await appAuth.authorizeAndExchangeCode(
                     AuthorizationTokenRequest(
                       '<client_id>',
                       '<redirect_url>',
@@ -50,7 +52,7 @@ var result = await appAuth.authorizeAndExchangeCode(
 If you already know the authorization and token endpoints, which may be because discovery isn't supported, then these could be explicitly specified
 
 ```dart
-var result = await appAuth.authorizeAndExchangeCode(
+final AuthorizationTokenResponse result = await appAuth.authorizeAndExchangeCode(
                     AuthorizationTokenRequest(
                       '<client_id>',
                       '<redirect_url>',
@@ -65,7 +67,7 @@ Upon completing the request successfully, the method should return an object (th
 If you would prefer to not have the automatic code exchange to happen then can call the `authorize` method instead of the `authorizeAndExchangeCode` method. This will return an instance of the `AuthorizationResponse` class that will contain the code verifier that AppAuth generated (as part of implementing PKCE) when issuing the authorization request, the authorization code and additional parameters should they exist. Both of the code verifier and authorization code would need to be stored so they can then be reused to exchange the code later on e.g.
 
 ```dart
-var result = await appAuth.token(TokenRequest('<client_id>', '<redirect_url>',
+final AuthorizationTokenResponse result = await appAuth.token(TokenRequest('<client_id>', '<redirect_url>',
         authorizationCode: '<authorization_code>',
         discoveryUrl: '<discovery_url>',
         codeVerifier: '<code_verifier>',
@@ -77,7 +79,7 @@ var result = await appAuth.token(TokenRequest('<client_id>', '<redirect_url>',
 Some providers may return a refresh token that could be used to refresh short-lived access tokens. A request to get a new access token before it expires could be made that would like similar to the following code
 
 ```dart
-var result = await appAuth.token(TokenRequest('<client_id>', '<redirect_url>',
+final AuthorizationTokenResponse result = await appAuth.token(TokenRequest('<client_id>', '<redirect_url>',
         discoveryUrl: '<discovery_url>',
         refreshToken: '<refresh_token>',
         scopes: ['openid','profile', 'email', 'offline_access', 'api']));

@@ -1,6 +1,7 @@
-part of flutter_appauth;
-
 class AuthorizationResponse {
+  AuthorizationResponse(this.authorizationCode, this.codeVerifier,
+      this.authorizationAdditionalParameters);
+
   /// The authorization code
   final String authorizationCode;
 
@@ -9,7 +10,4 @@ class AuthorizationResponse {
 
   /// Additional parameters included in the response
   final Map<String, dynamic> authorizationAdditionalParameters;
-
-  AuthorizationResponse(this.authorizationCode, this.codeVerifier,
-      this.authorizationAdditionalParameters);
 }

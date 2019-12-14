@@ -73,7 +73,7 @@ class FlutterAppAuth {
     if (Platform.isAndroid) {
       throw 'Use an authorization request';
     } else {
-      final Map<dynamic, dynamic> result = await _channel.invokeMethod('endsession', request.toMap());
+      final Map<dynamic, dynamic> result = await _channel.invokeMethod('endSession', request.toMap());
 
       return EndSessionResponse(
         result['state'],

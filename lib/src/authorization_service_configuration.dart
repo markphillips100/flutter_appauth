@@ -1,6 +1,6 @@
 class AuthorizationServiceConfiguration {
   AuthorizationServiceConfiguration(
-      this.authorizationEndpoint, this.tokenEndpoint)
+      this.authorizationEndpoint, this.tokenEndpoint, this.endSessionEndpoint)
       : assert(tokenEndpoint != null && authorizationEndpoint != null,
             'Must specify both the authorization and token endpoints');
 
@@ -8,10 +8,13 @@ class AuthorizationServiceConfiguration {
 
   final String tokenEndpoint;
 
+  final String endSessionEndpoint;
+
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
       'tokenEndpoint': tokenEndpoint,
-      'authorizationEndpoint': authorizationEndpoint
+      'authorizationEndpoint': authorizationEndpoint,
+      'endSessionEndpoint': endSessionEndpoint
     };
   }
 }
